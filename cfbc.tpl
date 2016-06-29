@@ -25,7 +25,6 @@ DATA_SECTION
 
 INITIALIZATION_SECTION
   gamma 0.1
-  //alpha 0.95836
   rho   0.1
 
 PARAMETER_SECTION
@@ -40,21 +39,14 @@ PARAMETER_SECTION
   vector x2(1,nobs);
   
   vector mu_x2(1,nobs);
-  //vector sigma_x2_sq(1,nobs);
 
   vector tau_sq(1,nobs);
 
-  //vector pred_Y2(1,nobs);
-  number                   test_obj_fun;
+  vector pred_Y2(1,nobs);
+  
   objective_function_value obj_fun;
 
 PROCEDURE_SECTION
-  //cout<<data<<endl;
-  //cout<<Y1<<endl;
-  //cout<<Y2<<endl;
-  //cout<<Delt<<endl;
-  //exit(42);
-
 //Get Box-Cox transforms
   x1 = (pow(Y1,gamma)-1.)/gamma;
   x2 = (pow(Y2,gamma)-1.)/gamma;
@@ -67,33 +59,9 @@ PROCEDURE_SECTION
 
   sigma_eps_sq = 1./nobs * sum(elem_div(square(x2-mu_x2),tau_sq));
 
-  //sigma_x2_sq = sigma_eps_sq * tau_sq;
-
-  //pred_Y2 = pow(gamma*mean(x2)+1,1/gamma);
-
-  //cout<<"rho"<<endl;
-  //cout<<rho<<endl;
-  //cout<<"pow(rho,Delt)"<<endl;
-  //cout<<pow(rho,Delt)<<endl;
-  //exit(42);
-
-  //obj_fun = square(1-1);
   obj_fun = nobs * (log(2.*PI*sigma_eps_sq)+1.) + sum(log(tau_sq)) - 2.*(gamma-1.)*sum(log(Y2));
-  //obj_fun = nobs * (log(2.*PI*sigma_eps_sq)+1.) + sum(log(tau_sq)) - 2.*(gamma-1.)*sum(log(Y2));
-
+ 
 REPORT_SECTION
-  report<<"gamma"<<endl;
-  report<<gamma<<endl;
-  report<<"alpha"<<endl;
-  report<<alpha<<endl;
-  report<<"rho"<<endl;
-  report<<rho<<endl;
-  report<<"sigma_eps_sq"<<endl;
-  report<<sigma_eps_sq<<endl; 
-  report<<"test_obj_fun"<<endl;
-  report<<test_obj_fun<<endl;
-  report<<"obj_fun"<<endl;
-  report<<obj_fun<<endl;  
   report<<"x1"<<endl;
   report<<x1<<endl;
   report<<"x2"<<endl;
@@ -104,3 +72,5 @@ REPORT_SECTION
   report<<tau_sq<<endl;
   report<<"residuals"<<endl;
   report<<x2-mu_x2<<endl;
+  report<<"pred_Y2"<<endl;
+  report<<pow(gamma*mu_x2+1.,1./gamma)<<endl;
