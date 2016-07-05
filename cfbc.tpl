@@ -7,6 +7,8 @@
 //Implemented in ADMB by Phil Ganz
 
 DATA_SECTION
+  //TURN ON DATA FILE NAME CHANGE FOR SIMULATION ONLY
+  !! ad_comm::change_datafile_name("cfbc.sim.dat");
   //Number of observations
   init_int    nobs;
   //Mark-recapture data 
@@ -24,15 +26,13 @@ DATA_SECTION
   int i;
 
 INITIALIZATION_SECTION
-  gamma 0.1
-  rho   0.1
-
+  gamma 0.5
+  rho   0.8
+ 
 PARAMETER_SECTION
-  init_number gamma;
+  init_bounded_number gamma(0.00001,1);
   init_number alpha;
-  init_number rho;
-  
-  number sigma_eps_sq;
+  init_bounded_number rho(0,0.99999);
   
   //Box-Cox transforms
   vector x1(1,nobs);
@@ -41,9 +41,13 @@ PARAMETER_SECTION
   vector mu_x2(1,nobs);
 
   vector tau_sq(1,nobs);
+  number sigma_eps_sq;
+  number alpha_tilde;
+  number k;
+  number Y_inf;
 
   vector pred_Y2(1,nobs);
-  
+
   objective_function_value obj_fun;
 
 PROCEDURE_SECTION
@@ -54,14 +58,29 @@ PROCEDURE_SECTION
 //Expected value of x2
   for (i=1;i<=nobs;i++){
   mu_x2(i) = alpha * (1.-pow(rho,Delt(i))) / (1.-rho) + pow(rho,Delt(i)) * x1(i);}
- 
-  tau_sq = (1.-pow(rho,2*Delt)) / (1.-square(rho));
 
+  tau_sq = (1.-pow(rho,2*Delt)) / (1.-square(rho));
   sigma_eps_sq = 1./nobs * sum(elem_div(square(x2-mu_x2),tau_sq));
+
+  alpha_tilde = alpha*gamma + 1. - rho;
+  k = -log(rho);
+  Y_inf = pow(alpha_tilde/(1.-rho),1./gamma);
+
+  pred_Y2 = pow(gamma*mu_x2+1.,1./gamma);
 
   obj_fun = nobs * (log(2.*PI*sigma_eps_sq)+1.) + sum(log(tau_sq)) - 2.*(gamma-1.)*sum(log(Y2));
  
 REPORT_SECTION
+  report<<"sigma_eps_sq"<<endl;
+  report<<sigma_eps_sq<<endl;
+  report<<"alpha_tilde"<<endl;
+  report<<alpha_tilde<<endl;  
+  report<<"k"<<endl;
+  report<<k<<endl;
+  report<<"Y_inf"<<endl;
+  report<<Y_inf<<endl;
+  report<<"obj_fun"<<endl;
+  report<<obj_fun<<endl;
   report<<"x1"<<endl;
   report<<x1<<endl;
   report<<"x2"<<endl;
@@ -73,4 +92,4 @@ REPORT_SECTION
   report<<"residuals"<<endl;
   report<<x2-mu_x2<<endl;
   report<<"pred_Y2"<<endl;
-  report<<pow(gamma*mu_x2+1.,1./gamma)<<endl;
+  report<<pred_Y2<<endl;
