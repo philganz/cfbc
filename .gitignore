@@ -1,3 +1,4 @@
+*.Rhistory
 *.docx
 *.cov
 *.dep

@@ -4,7 +4,7 @@
 #Terrance J. Quinn II and Richard B. Deriso
 #
 #Example with Pacific halibut mark-recapture data
-#Simulation implemented in R a by Phil Ganz
+#Simulation implemented in R by Phil Ganz
 
 #set seed for reproducibility
 set.seed(269)
@@ -98,34 +98,3 @@ hist(results[,"rho"],breaks=20,col="grey",main="")
 abline(v=mean(results[,"rho"]),col=2,lty=2,lwd=2)
 abline(v=rho,lty=2,lwd=2)
 mtext("Red=mean(Estimated)  Black=True", side = 3, line = -2, cex=1.5, outer = TRUE)
-
-###
-out <- boxcox(lm(dat$Y1~1))
-range(out$x[out$y > max(out$y)-qchisq(0.95,1)/2])
-
-#test simulation
-test <- array(dim=c(nobs,ncol(dat.sim),R))
-for (i in 1:R){
-dat$Y1 <- sample(dat$Y1,nobs,replace=TRUE)
-dat$Delt <- sample(dat$Delt,nobs,replace=TRUE)
-
-#apply Box-Cox transform to Y1s to get x1s
-x1 <- (dat$Y1^gamma-1)/gamma
-
-#simulate x2s from MLE parameter estimates (treated as "known" parameter values)
-x2.sim <- alpha*(1-rho^dat$Delt)/(1-rho)+rho^dat$Delt*x1
-#add error
-x2.sim <- x2.sim + rnorm(nobs,0,sigma_eps)*(1-rho^dat$Delt)/(1-rho)
-
-#back-transform x2s to simulate Y2s
-Y2.sim <- (gamma*x2.sim+1)^(1/gamma)
-Y2.sim <- round(Y2.sim)
-
-test[,,i] <- cbind(dat$Y1,Y2.sim,dat$Delt)
-}
-
-colnames(test) <- c("Y1","Y2","Delt")
-par(mfrow=c(2,3))
-for (i in 1:R){
-hist(test[,"Y1",i],breaks=20,col="grey",xlim=c(40,180))}
-

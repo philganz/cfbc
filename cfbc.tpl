@@ -26,8 +26,7 @@ DATA_SECTION
   int i;
 
 INITIALIZATION_SECTION
-  gamma 0.5
-  rho   0.8
+  rho   0.9
  
 PARAMETER_SECTION
   init_bounded_number gamma(0.00001,1);
