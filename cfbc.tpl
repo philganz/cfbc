@@ -8,7 +8,7 @@
 
 DATA_SECTION
   //TURN ON DATA FILE NAME CHANGE FOR SIMULATION ONLY
-  !! ad_comm::change_datafile_name("cfbc.sim.dat");
+  //! ad_comm::change_datafile_name("cfbc.sim.dat");
   //Number of observations
   init_int    nobs;
   //Mark-recapture data 
@@ -33,6 +33,8 @@ PARAMETER_SECTION
   init_number alpha;
   init_bounded_number rho(0,0.99999);
   
+  likeprof_number gamma_prof;
+
   //Box-Cox transforms
   vector x1(1,nobs);
   vector x2(1,nobs);
@@ -50,6 +52,9 @@ PARAMETER_SECTION
   objective_function_value obj_fun;
 
 PROCEDURE_SECTION
+//Equate gamma to its profile
+  gamma_prof = gamma;
+
 //Get Box-Cox transforms
   x1 = (pow(Y1,gamma)-1.)/gamma;
   x2 = (pow(Y2,gamma)-1.)/gamma;
