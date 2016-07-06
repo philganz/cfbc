@@ -21,3 +21,6 @@
 *.prf
 *dgs2
 *diags
+*.RData
+*.xlsx
+*.csv
