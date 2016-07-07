@@ -1,3 +1,18 @@
+library(reshape2)
+
+#load and reassign data
+load("results_gam.RData")
+results_gam <- results 
+load("results_main.RData")
+results_main <- results 
+load("results_sig.RData")
+results_sig <- results 
+
+#reshape arrays into long data frames
+results_gam_df <- melt(results_gam)
+results_main_df <- melt(results_main)
+results_sig_df <- melt(results_sig)
+
 #Plot pdfs of parameter estimates
 par(mfrow=c(1,3))
 hist(results[,"gamma"],breaks=20,col="grey",main="")
