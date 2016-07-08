@@ -16,7 +16,7 @@ library(xlsx)
 dat <- read.table("cfbc.dat",skip=3,col.names=c("Y1","Y2","Delt"))
 
 #"true" parameter values for simulation  
-gamma_true <- 0.5 #c(0.1, 0.3, 0.7, 0.9)
+gamma_true <-  c(0.1, 0.3, 0.5, 0.7, 0.9, 1) #0.5 #c(0.1, 0.3, 0.7, 0.9)
 alpha_true <- 1
 rho_true   <- 0.95
 
@@ -34,8 +34,9 @@ to_record <- c("gamma_true", "gamma_est","alpha_true","alpha_est","rho_true","rh
 results   <- array(NA,dim=c(R,length(to_record),length(gamma_true),length(sigma_eps_true)),dimnames=list(NULL,to_record,gamma_true,sigma_eps_true))
 
 #set up file name for saving results later
-if(length(gamma_true)>1) {file_name <- "results_gam.xlsx"
-} else if (length(sigma_eps_true)>1) {file_name <- "results_sig.xlsx"
+if(length(gamma_true)==4) {file_name <- "results_gam.xlsx"
+} else if (length(sigma_eps_true)==4) {file_name <- "results_sig.xlsx"
+} else if (length(gamma_true)==6) {file_name <- "results_fixed_gam.xlsx"
 } else {file_name <- "results_main.xlsx"}
 write.xlsx(R,file=file_name,sheetName="Replicates")
 

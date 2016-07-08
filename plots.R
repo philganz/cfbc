@@ -12,6 +12,9 @@ results_main <- results
 load("results_sig.RData")
 results_sig  <- results 
 
+load("results_fixed_gam.RData")
+results_fixed_gam <- results
+
 #remove last array
 rm(results)
 
@@ -19,13 +22,15 @@ rm(results)
 results_gam  <- rbind(results_gam[,,"0.1",],results_gam[,,"0.3",],results_gam[,,"0.7",],results_gam[,,"0.9",])
 results_main <- as.matrix(results_main[,,1,1])
 results_sig  <- rbind(results_sig[,,,"0.1"],results_sig[,,,"0.3"],results_sig[,,,"0.7"],results_sig[,,,"0.9"])
+results_fixed_gam  <- rbind(results_fixed_gam[,,"0.1",],results_fixed_gam[,,"0.3",],results_fixed_gam[,,"0.5",],results_fixed_gam[,,"0.7",],results_fixed_gam[,,"0.9",],results_fixed_gam[,,"1",])
 
 #convert to data frames
 results_gam  <- data.frame(results_gam)
 results_main <- data.frame(results_main)
 results_sig  <- data.frame(results_sig)
-
-#create one data frame for all results
+results_fixed_gam  <- data.frame(results_fixed_gam)
+  
+#create one data frame for all results (except fixed case)
 results <- rbind(results_gam,results_main,results_sig)
 
 #add main results to gamma and sigma cases
@@ -33,8 +38,11 @@ results_gam <- rbind(results_gam,results_main)
 results_sig <- rbind(results_sig,results_main)
 
 #add residuals column for parameters of interest
-results_gam$gamma_resids <- results_gam$gamma_est - results_gam$gamma_true
-results_sig$sigma_eps_resids <- results_sig$sigma_eps_est - results_sig$sigma_eps_true
+results_gam$gamma_resids           <- results_gam$gamma_est - results_gam$gamma_true
+results_sig$sigma_eps_resids       <- results_sig$sigma_eps_est - results_sig$sigma_eps_true
+results_fixed_gam$alpha_resids     <- results_fixed_gam$alpha_est - results_fixed_gam$alpha_true
+results_fixed_gam$rho_resids       <- results_fixed_gam$rho_est - results_fixed_gam$rho_true
+results_fixed_gam$sigma_eps_resids <- results_fixed_gam$sigma_eps_est - results_fixed_gam$sigma_eps_true
 
 #plots
 
@@ -88,5 +96,103 @@ sb <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids))+
   coord_flip()
 #arrange plots
 grid.arrange(gb,sb,ncol=2)
+#turn plotting function off
+dev.off()
+
+#fixed gamma histograms
+#reassign true gammas to objects
+gamma_true <-  c(0.1, 0.3, 0.5, 0.7, 0.9, 1)
+#set up labels
+xlab <- c(expression(gamma==0.1),expression(gamma==0.3),expression(gamma==0.5),expression(gamma==0.7),expression(gamma==0.9),expression(gamma==1))
+#initialize plotting function
+pdf("fixed_gam_hists.pdf",10,4)
+#create plots
+par(mfcol=c(3,6),mar=d.mar-c(1,2,3,0))
+for (j in 1:length(gamma_true)){
+hist(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(alpha),xlab="",cex.main=2)
+abline(v=results_fixed_gam$alpha_true, lwd=1.3)
+abline(v=mean(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
+abline(v=median(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)
+hist(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(rho),xlab="",cex.main=2)
+abline(v=results_fixed_gam$rho_true, lwd=1.3)
+abline(v=mean(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
+abline(v=median(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)
+hist(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(sigma[epsilon]),xlab=xlab[j],cex.main=2,cex.lab=1.5)
+abline(v=results_fixed_gam$sigma_eps_true, lwd=1.3)
+abline(v=mean(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
+abline(v=median(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)}
+#turn plotting function off
+dev.off()
+
+#fixed gamma boxplots
+
+#all values of gamma_true
+#initialize plotting function
+pdf("fixed_all_gam_resids.pdf",10,4)
+#create plots
+fab <- ggplot(results_fixed_gam,aes(factor(gamma_true),alpha_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Residuals")+
+  scale_y_continuous(breaks=c(0,25,50,75,100))+
+  labs(title=expression(alpha))+
+  coord_flip()
+frb <- ggplot(results_fixed_gam,aes(factor(gamma_true),rho_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Residuals")+
+  labs(title=expression(rho))+
+  coord_flip()
+fsb <- ggplot(results_fixed_gam,aes(factor(gamma_true),sigma_eps_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(fab,frb,fsb,ncol=3)
+#turn plotting function off
+dev.off()
+
+#values of gamma_true > 0.3
+#initialize plotting function
+pdf("fixed_high_gam_resids.pdf",10,4)
+#create plots
+fab2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),alpha_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Residuals")+
+  labs(title=expression(alpha))+
+  coord_flip()
+frb2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),rho_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Residuals")+
+  labs(title=expression(rho))+
+  coord_flip()
+fsb2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),sigma_eps_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(fab2,frb2,fsb2,ncol=3)
 #turn plotting function off
 dev.off()

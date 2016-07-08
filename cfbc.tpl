@@ -26,10 +26,11 @@ DATA_SECTION
   int i;
 
 INITIALIZATION_SECTION
+  gamma 1
   rho   0.8
  
 PARAMETER_SECTION
-  init_bounded_number gamma(0.00001,1);
+  init_number gamma(-1);
   init_number alpha;
   init_bounded_number rho(0,0.99999);
   
