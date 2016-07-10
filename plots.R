@@ -39,6 +39,8 @@ results_sig <- rbind(results_sig,results_main)
 
 #add residuals column for parameters of interest
 results_gam$gamma_resids           <- results_gam$gamma_est - results_gam$gamma_true
+results_gam$sigma_eps_resids       <- results_gam$sigma_eps_est - results_gam$sigma_eps_true
+results_sig$gamma_resids           <- results_sig$gamma_est - results_sig$gamma_true
 results_sig$sigma_eps_resids       <- results_sig$sigma_eps_est - results_sig$sigma_eps_true
 results_fixed_gam$alpha_resids     <- results_fixed_gam$alpha_est - results_fixed_gam$alpha_true
 results_fixed_gam$rho_resids       <- results_fixed_gam$rho_est - results_fixed_gam$rho_true
@@ -73,7 +75,7 @@ abline(v=median(results_main$sigma_eps_est),lty=3,lwd=2)
 #turn plotting function off
 dev.off()
 
-#boxplots of gamma and sigma_eps residuals
+#boxplots of gamma and sigma_eps residuals individually 
 #initialize plotting function
 pdf("gam_sig_resids.pdf",8,4)
 #create plots
@@ -96,6 +98,114 @@ sb <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids))+
   coord_flip()
 #arrange plots
 grid.arrange(gb,sb,ncol=2)
+#turn plotting function off
+dev.off()
+
+#boxplots of gamma and sigma_eps residuals 
+
+#gamma cases
+#initialize plotting function
+pdf("gam_case_resids.pdf",8,4)
+#create plots
+gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Residuals")+
+  labs(title=expression(gamma))+
+  coord_flip()
+gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(gg,gs,ncol=2)
+#turn plotting function off
+dev.off()
+
+#sigma_eps cases
+#initialize plotting function
+pdf("sig_case_resids.pdf",8,4)
+#create plots
+sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~sigma[epsilon]))+
+  ylab("Residuals")+
+  labs(title=expression(gamma))+
+  coord_flip()
+ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(sg,ss,ncol=2)
+#turn plotting function off
+dev.off()
+
+#boxplots of gamma and sigma_eps residuals 
+
+#gamma cases
+#initialize plotting function
+pdf("gam_case_rel_resids.pdf",8,4)
+#create plots
+gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids/gamma_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Relative residuals")+
+  labs(title=expression(gamma))+
+  coord_flip()
+gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(gg,gs,ncol=2)
+#turn plotting function off
+dev.off()
+
+#sigma_eps cases
+#initialize plotting function
+pdf("sig_case_rel_resids.pdf",8,4)
+#create plots
+sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids/gamma_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~sigma[epsilon]))+
+  ylab("Relative residuals")+
+  labs(title=expression(gamma))+
+  coord_flip()
+ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(sg,ss,ncol=2)
 #turn plotting function off
 dev.off()
 
