@@ -236,7 +236,7 @@ dev.off()
 
 #fixed gamma boxplots
 
-#all values of gamma_true
+#all values of gamma_true residuals
 #initialize plotting function
 pdf("fixed_all_gam_resids.pdf",10,4)
 #create plots
@@ -272,7 +272,7 @@ grid.arrange(fab,frb,fsb,ncol=3)
 #turn plotting function off
 dev.off()
 
-#values of gamma_true > 0.3
+#values of gamma_true > 0.3 residuals
 #initialize plotting function
 pdf("fixed_high_gam_resids.pdf",10,4)
 #create plots
@@ -304,5 +304,76 @@ fsb2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(fa
   coord_flip()
 #arrange plots
 grid.arrange(fab2,frb2,fsb2,ncol=3)
+#turn plotting function off
+dev.off()
+
+#all values of gamma_true residuals
+#initialize plotting function
+pdf("fixed_all_gam_rel_resids.pdf",10,4)
+#create plots
+fabr <- ggplot(results_fixed_gam,aes(factor(gamma_true),alpha_resids/alpha_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Relative residuals")+
+  scale_y_continuous(breaks=c(0,25,50,75,100))+
+  labs(title=expression(alpha))+
+  coord_flip()
+frbr <- ggplot(results_fixed_gam,aes(factor(gamma_true),rho_resids/rho_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(rho))+
+  coord_flip()
+fsbr <- ggplot(results_fixed_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(fabr,frbr,fsbr,ncol=3)
+#turn plotting function off
+dev.off()
+
+#values of gamma_true > 0.3 residuals
+#initialize plotting function
+pdf("fixed_high_gam_rel_resids.pdf",10,4)
+#create plots
+fabr2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),alpha_resids/alpha_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Relative residuals")+
+  labs(title=expression(alpha))+
+  coord_flip()
+frbr2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),rho_resids/rho_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(rho))+
+  coord_flip()
+fsbr2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(fabr2,frbr2,fsbr2,ncol=3)
 #turn plotting function off
 dev.off()
