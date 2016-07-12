@@ -219,15 +219,15 @@ pdf("fixed_gam_hists.pdf",10,4)
 #create plots
 par(mfcol=c(3,6),mar=d.mar-c(1,2,3,0))
 for (j in 1:length(gamma_true)){
-hist(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(alpha),xlab="",cex.main=2)
+hist(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(alpha),xlab="",cex.main=1.8)
 abline(v=results_fixed_gam$alpha_true, lwd=1.3)
 abline(v=mean(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
 abline(v=median(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)
-hist(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(rho),xlab="",cex.main=2)
+hist(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(rho),xlab="",cex.main=1.8)
 abline(v=results_fixed_gam$rho_true, lwd=1.3)
 abline(v=mean(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
 abline(v=median(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)
-hist(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(sigma[epsilon]),xlab=xlab[j],cex.main=2,cex.lab=1.5)
+hist(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(sigma[epsilon]),xlab=xlab[j],cex.main=1.8,cex.lab=1.5)
 abline(v=results_fixed_gam$sigma_eps_true, lwd=1.3)
 abline(v=mean(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
 abline(v=median(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)}
