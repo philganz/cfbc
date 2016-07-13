@@ -101,7 +101,7 @@ grid.arrange(gb,sb,ncol=2)
 #turn plotting function off
 dev.off()
 
-#boxplots of gamma and sigma_eps residuals 
+#boxplots of gamma and sigma_eps case residuals 
 
 #gamma cases
 #initialize plotting function
@@ -208,6 +208,100 @@ ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_t
 grid.arrange(sg,ss,ncol=2)
 #turn plotting function off
 dev.off()
+
+#gamma cases
+#initialize plotting function
+pdf("gam_case_all_relative.pdf",8,4)
+#create plots
+ga <- ggplot(results_gam,aes(factor(gamma_true),(alpha_est-alpha_true)/alpha_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Relative residuals")+
+  labs(title=expression(alpha))+
+  coord_flip()
+gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids/gamma_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(gamma))+
+  coord_flip()
+gr <- ggplot(results_gam,aes(factor(gamma_true),(rho_est-rho_true)/rho_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~gamma))+
+  ylab("Relative residuals")+
+  labs(title=expression(rho))+
+  coord_flip()
+gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(ga,gg,gr,gs,ncol=2,nrow=2)
+#turn plotting function off
+dev.off()
+
+#sigma_eps cases
+#initialize plotting function
+pdf("sig_case_all_relative.pdf",8,4)
+#create plots
+sa <- ggplot(results_sig,aes(factor(sigma_eps_true),(alpha_est-alpha_true)/alpha_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~sigma[epsilon]))+
+  ylab("Relative residuals")+
+  labs(title=expression(alpha))+
+  coord_flip()
+sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids/gamma_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(gamma))+
+  coord_flip()
+sr <- ggplot(results_sig,aes(factor(sigma_eps_true),(rho_est-rho_true)/rho_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab(expression("True"~sigma[epsilon]))+
+  ylab("Relative residuals")+
+  labs(title=expression(rho))+
+  coord_flip()
+ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_true))+
+  geom_boxplot()+
+  geom_hline(yintercept=0)+
+  theme_classic(base_size=16)+
+  xlab("")+
+  scale_x_discrete(breaks=NULL)+
+  ylab("Relative residuals")+
+  labs(title=expression(sigma[epsilon]))+
+  coord_flip()
+#arrange plots
+grid.arrange(sa,sg,sr,ss,ncol=2,nrow=2)
+#turn plotting function off
+dev.off()
+
+#double check
+# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.9)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.9),probs=c(0.05,0.25,0.5,0.75,0.95))
+# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.7)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.7),probs=c(0.05,0.25,0.5,0.75,0.95))
+# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.5)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.5),probs=c(0.05,0.25,0.5,0.75,0.95))
+# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.3)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.3),probs=c(0.05,0.25,0.5,0.75,0.95))
+# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.1)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.1),probs=c(0.05,0.25,0.5,0.75,0.95))
+
 
 #fixed gamma histograms
 #reassign true gammas to objects
