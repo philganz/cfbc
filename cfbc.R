@@ -1,10 +1,10 @@
 #Combining the Cohen-Fishman growth increment model 
-#with a Box-Cox transformation: flexibility and uncertainty
+#with a Box-Cox transformation
 #
-#Terrance J. Quinn II and Richard B. Deriso
+#Terrance J. Quinn II, Richard B. Deriso, and Philip D. Ganz
 #
 #Example with Pacific halibut mark-recapture data
-#Simulation implemented in R by Phil Ganz
+#Simulation implemented in R by P.D. Ganz
 
 #set seed for reproducibility
 set.seed(269)

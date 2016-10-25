@@ -1,14 +1,14 @@
 //Combining the Cohen-Fishman growth increment model 
-//with a Box-Cox transformation: flexibility and uncertainty
+//with a Box-Cox transformation
 //
-//Terrance J. Quinn II and Richard B. Deriso
+//Terrance J. Quinn II, Richard B. Deriso, and Philip D. Ganz
 //
 //Example with Pacific halibut mark-recapture data
-//Implemented in ADMB by Phil Ganz
+//Implemented in ADMB by P.D. Ganz
 
 DATA_SECTION
   //TURN ON DATA FILE NAME CHANGE FOR SIMULATION ONLY
-  !! ad_comm::change_datafile_name("cfbc.sim.dat");
+  //!! ad_comm::change_datafile_name("cfbc.sim.dat");
   //Number of observations
   init_int    nobs;
   //Mark-recapture data 
@@ -26,12 +26,12 @@ DATA_SECTION
   int i;
 
 INITIALIZATION_SECTION
-  //gamma 1
+  //gamma 0.408
   rho   0.8
  
 PARAMETER_SECTION
-  //init_number gamma(-1);
-  init_bounded_number gamma(0.00001,1)
+  //init_number gamma(-1);               // For cases in which gamma is fixed
+  init_bounded_number gamma(0.00001,1) // For cases in which gamma is estimated 
   init_number alpha;
   init_bounded_number rho(0,0.99999);
   
@@ -58,7 +58,7 @@ PROCEDURE_SECTION
   //gamma_prof = gamma;
 
 //Get Box-Cox transforms
-  x1 = (pow(Y1,gamma)-1.)/gamma;
+  x1 = (pow(Y1,gamma)-1.)/gamma; 
   x2 = (pow(Y2,gamma)-1.)/gamma;
 
 //Expected value of x2
