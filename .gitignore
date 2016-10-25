@@ -23,5 +23,6 @@
 *diags
 *.RData
 *.xlsx
+*.xlsm
 *.csv
 *.pdf
