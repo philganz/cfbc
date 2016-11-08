@@ -8,7 +8,7 @@
 
 DATA_SECTION
   //TURN ON DATA FILE NAME CHANGE FOR SIMULATION ONLY
-  //!! ad_comm::change_datafile_name("cfbc.sim.dat");
+  !! ad_comm::change_datafile_name("cfbc.sim.dat");
   //Number of observations
   init_int    nobs;
   //Mark-recapture data 
@@ -26,7 +26,7 @@ DATA_SECTION
   int i;
 
 INITIALIZATION_SECTION
-  //gamma 0.408
+  //gamma 1
   rho   0.8
  
 PARAMETER_SECTION

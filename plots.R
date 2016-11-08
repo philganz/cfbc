@@ -51,169 +51,35 @@ results_fixed_gam$sigma_eps_resids <- results_fixed_gam$sigma_eps_est - results_
 #save default margins
 d.mar <- c(5.1,4.1,4.1,2.1)
 
-#histograms of parameter estimates
+#Figure 6. Probability distributions of parameter estimates (converged runs only)
 #initialize plotting function
-pdf("params_hists.pdf",7,5)
+pdf("params_hists_converged.pdf",7,5)
 #create plots
 par(mfrow=c(2,2),mar=d.mar-c(0,0,1,0))
-hist(results_main$gamma_est,breaks=20,col="grey",main=expression(gamma),xlab="",cex.main=2)
+hist(subset(results_main$gamma_est,results_main$convergence==1),breaks=20,col="grey",main=expression(gamma),xlab="",cex.main=2)
 abline(v=results_main$gamma_true,lwd=2)
-abline(v=mean(results_main$gamma_est),lty=2,lwd=2)
-abline(v=median(results_main$gamma_est),lty=3,lwd=2)
-hist(results_main$alpha_est,breaks=20,col="grey",main=expression(alpha),xlab="",cex.main=2)
+abline(v=mean(subset(results_main$gamma_est,results_main$convergence==1)),lty=2,lwd=2)
+abline(v=median(subset(results_main$gamma_est,results_main$convergence==1)),lty=3,lwd=2)
+hist(subset(results_main$alpha_est,results_main$convergence==1),breaks=20,col="grey",main=expression(alpha),xlab="",cex.main=2)
 abline(v=results_main$alpha_true,lwd=2)
-abline(v=mean(results_main$alpha_est),lty=2,lwd=2)
-abline(v=median(results_main$alpha_est),lty=3,lwd=2)
-hist(results_main$rho_est,breaks=20,col="grey",main=expression(rho),xlab="",cex.main=2)
+abline(v=mean(subset(results_main$alpha_est,results_main$convergence==1)),lty=2,lwd=2)
+abline(v=median(subset(results_main$alpha_est,results_main$convergence==1)),lty=3,lwd=2)
+hist(subset(results_main$rho_est,results_main$convergence==1),breaks=20,col="grey",main=expression(rho),xlab="",cex.main=2)
 abline(v=results_main$rho_true,lwd=2)
-abline(v=mean(results_main$rho_est),lty=2,lwd=2)
-abline(v=median(results_main$rho_est),lty=3,lwd=2)
-hist(results_main$sigma_eps_est,breaks=20,col="grey",main=expression(sigma[epsilon]),xlab="",cex.main=2)
+abline(v=mean(subset(results_main$rho_est,results_main$convergence==1)),lty=2,lwd=2)
+abline(v=median(subset(results_main$rho_est,results_main$convergence==1)),lty=3,lwd=2)
+hist(subset(results_main$sigma_eps_est,results_main$convergence==1),breaks=20,col="grey",main=expression(sigma[epsilon]),xlab="",cex.main=2)
 abline(v=results_main$sigma_eps_true,lwd=2)
-abline(v=mean(results_main$sigma_eps_est),lty=2,lwd=2)
-abline(v=median(results_main$sigma_eps_est),lty=3,lwd=2)
+abline(v=mean(subset(results_main$sigma_eps_est,results_main$convergence==1)),lty=2,lwd=2)
+abline(v=median(subset(results_main$sigma_eps_est,results_main$convergence==1)),lty=3,lwd=2)
 #turn plotting function off
 dev.off()
 
-#boxplots of gamma and sigma_eps residuals individually 
+#Figure 7. Relative residuals for gamma sensitivity simulation (converged runs only)
 #initialize plotting function
-pdf("gam_sig_resids.pdf",8,4)
+pdf("gam_case_all_relative_converged.pdf",8,4)
 #create plots
-gb <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("True value")+
-  ylab("Residuals")+
-  labs(title=expression(gamma))+
-  coord_flip()
-sb <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(gb,sb,ncol=2)
-#turn plotting function off
-dev.off()
-
-#boxplots of gamma and sigma_eps case residuals 
-
-#gamma cases
-#initialize plotting function
-pdf("gam_case_resids.pdf",8,4)
-#create plots
-gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~gamma))+
-  ylab("Residuals")+
-  labs(title=expression(gamma))+
-  coord_flip()
-gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(gg,gs,ncol=2)
-#turn plotting function off
-dev.off()
-
-#sigma_eps cases
-#initialize plotting function
-pdf("sig_case_resids.pdf",8,4)
-#create plots
-sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~sigma[epsilon]))+
-  ylab("Residuals")+
-  labs(title=expression(gamma))+
-  coord_flip()
-ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(sg,ss,ncol=2)
-#turn plotting function off
-dev.off()
-
-#boxplots of gamma and sigma_eps residuals 
-
-#gamma cases
-#initialize plotting function
-pdf("gam_case_rel_resids.pdf",8,4)
-#create plots
-gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids/gamma_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~gamma))+
-  ylab("Relative residuals")+
-  labs(title=expression(gamma))+
-  coord_flip()
-gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Relative residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(gg,gs,ncol=2)
-#turn plotting function off
-dev.off()
-
-#sigma_eps cases
-#initialize plotting function
-pdf("sig_case_rel_resids.pdf",8,4)
-#create plots
-sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids/gamma_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~sigma[epsilon]))+
-  ylab("Relative residuals")+
-  labs(title=expression(gamma))+
-  coord_flip()
-ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Relative residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(sg,ss,ncol=2)
-#turn plotting function off
-dev.off()
-
-#gamma cases
-#initialize plotting function
-pdf("gam_case_all_relative.pdf",8,4)
-#create plots
-ga <- ggplot(results_gam,aes(factor(gamma_true),(alpha_est-alpha_true)/alpha_true))+
+gac <- ggplot(subset(results_gam,results_gam$convergence==1),aes(factor(gamma_true),(alpha_est-alpha_true)/alpha_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -221,7 +87,7 @@ ga <- ggplot(results_gam,aes(factor(gamma_true),(alpha_est-alpha_true)/alpha_tru
   ylab("Relative residuals")+
   labs(title=expression(alpha))+
   coord_flip()
-gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids/gamma_true))+
+ggc <- ggplot(subset(results_gam,results_gam$convergence==1),aes(factor(gamma_true),gamma_resids/gamma_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -230,7 +96,7 @@ gg <- ggplot(results_gam,aes(factor(gamma_true),gamma_resids/gamma_true))+
   ylab("Relative residuals")+
   labs(title=expression(gamma))+
   coord_flip()
-gr <- ggplot(results_gam,aes(factor(gamma_true),(rho_est-rho_true)/rho_true))+
+grc <- ggplot(subset(results_gam,results_gam$convergence==1),aes(factor(gamma_true),(rho_est-rho_true)/rho_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -238,7 +104,7 @@ gr <- ggplot(results_gam,aes(factor(gamma_true),(rho_est-rho_true)/rho_true))+
   ylab("Relative residuals")+
   labs(title=expression(rho))+
   coord_flip()
-gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
+gsc <- ggplot(subset(results_gam,results_gam$convergence==1),aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -248,15 +114,15 @@ gs <- ggplot(results_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true)
   labs(title=expression(sigma[epsilon]))+
   coord_flip()
 #arrange plots
-grid.arrange(ga,gg,gr,gs,ncol=2,nrow=2)
+grid.arrange(gac,ggc,grc,gsc,ncol=2,nrow=2)
 #turn plotting function off
 dev.off()
 
-#sigma_eps cases
+#Figure 8. Relative residuals for sigma sensitivity simulation (converged runs only)
 #initialize plotting function
-pdf("sig_case_all_relative.pdf",8,4)
+pdf("sig_case_all_relative_converged.pdf",8,4)
 #create plots
-sa <- ggplot(results_sig,aes(factor(sigma_eps_true),(alpha_est-alpha_true)/alpha_true))+
+sac <- ggplot(subset(results_sig,results_sig$convergence==1),aes(factor(sigma_eps_true),(alpha_est-alpha_true)/alpha_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -264,7 +130,7 @@ sa <- ggplot(results_sig,aes(factor(sigma_eps_true),(alpha_est-alpha_true)/alpha
   ylab("Relative residuals")+
   labs(title=expression(alpha))+
   coord_flip()
-sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids/gamma_true))+
+sgc <- ggplot(subset(results_sig,results_sig$convergence==1),aes(factor(sigma_eps_true),gamma_resids/gamma_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -273,7 +139,7 @@ sg <- ggplot(results_sig,aes(factor(sigma_eps_true),gamma_resids/gamma_true))+
   ylab("Relative residuals")+
   labs(title=expression(gamma))+
   coord_flip()
-sr <- ggplot(results_sig,aes(factor(sigma_eps_true),(rho_est-rho_true)/rho_true))+
+src <- ggplot(subset(results_sig,results_sig$convergence==1),aes(factor(sigma_eps_true),(rho_est-rho_true)/rho_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -281,7 +147,7 @@ sr <- ggplot(results_sig,aes(factor(sigma_eps_true),(rho_est-rho_true)/rho_true)
   ylab("Relative residuals")+
   labs(title=expression(rho))+
   coord_flip()
-ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_true))+
+ssc <- ggplot(subset(results_sig,results_sig$convergence==1),aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_true))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -291,59 +157,29 @@ ss <- ggplot(results_sig,aes(factor(sigma_eps_true),sigma_eps_resids/sigma_eps_t
   labs(title=expression(sigma[epsilon]))+
   coord_flip()
 #arrange plots
-grid.arrange(sa,sg,sr,ss,ncol=2,nrow=2)
+grid.arrange(sac,sgc,src,ssc,ncol=2,nrow=2)
 #turn plotting function off
 dev.off()
 
-#double check
-# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.9)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.9),probs=c(0.05,0.25,0.5,0.75,0.95))
-# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.7)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.7),probs=c(0.05,0.25,0.5,0.75,0.95))
-# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.5)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.5),probs=c(0.05,0.25,0.5,0.75,0.95))
-# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.3)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.3),probs=c(0.05,0.25,0.5,0.75,0.95))
-# quantile(subset(results_sig$sigma_eps_resids, results_sig$sigma_eps_true==0.1)/subset(results_sig$sigma_eps_true, results_sig$sigma_eps_true==0.1),probs=c(0.05,0.25,0.5,0.75,0.95))
-
-
-#fixed gamma histograms
+#fixed gamma exercise
 #reassign true gammas to objects
 gamma_true <-  c(0.1, 0.3, 0.5, 0.7, 0.9, 1)
 #set up labels
 xlab <- c(expression(gamma==0.1),expression(gamma==0.3),expression(gamma==0.5),expression(gamma==0.7),expression(gamma==0.9),expression(gamma==1))
-#initialize plotting function
-pdf("fixed_gam_hists.pdf",10,4)
-#create plots
-par(mfcol=c(3,6),mar=d.mar-c(1,2,3,0))
-for (j in 1:length(gamma_true)){
-hist(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(alpha),xlab="",cex.main=1.8)
-abline(v=results_fixed_gam$alpha_true, lwd=1.3)
-abline(v=mean(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
-abline(v=median(subset(results_fixed_gam$alpha_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)
-hist(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(rho),xlab="",cex.main=1.8)
-abline(v=results_fixed_gam$rho_true, lwd=1.3)
-abline(v=mean(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
-abline(v=median(subset(results_fixed_gam$rho_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)
-hist(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j]),breaks=20,col="grey",main=expression(sigma[epsilon]),xlab=xlab[j],cex.main=1.8,cex.lab=1.5)
-abline(v=results_fixed_gam$sigma_eps_true, lwd=1.3)
-abline(v=mean(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=2, lwd=1.3)
-abline(v=median(subset(results_fixed_gam$sigma_eps_est,results_fixed_gam$gamma_true==gamma_true[j])),lty=3, lwd=1.3)}
-#turn plotting function off
-dev.off()
 
-#fixed gamma boxplots
-
-#all values of gamma_true residuals
+#Figure 9. Residuals for fixed gamma cases > 0.3 (converged runs only)
 #initialize plotting function
-pdf("fixed_all_gam_resids.pdf",10,4)
+pdf("fixed_high_gam_resids_converged.pdf",10,4)
 #create plots
-fab <- ggplot(results_fixed_gam,aes(factor(gamma_true),alpha_resids))+
+fab2c <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3 & results_fixed_gam$convergence==1),aes(factor(gamma_true),alpha_resids))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
   xlab(expression("True"~gamma))+
   ylab("Residuals")+
-  scale_y_continuous(breaks=c(0,25,50,75,100))+
   labs(title=expression(alpha))+
   coord_flip()
-frb <- ggplot(results_fixed_gam,aes(factor(gamma_true),rho_resids))+
+frb2c <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3 & results_fixed_gam$convergence==1),aes(factor(gamma_true),rho_resids))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -352,7 +188,7 @@ frb <- ggplot(results_fixed_gam,aes(factor(gamma_true),rho_resids))+
   ylab("Residuals")+
   labs(title=expression(rho))+
   coord_flip()
-fsb <- ggplot(results_fixed_gam,aes(factor(gamma_true),sigma_eps_resids))+
+fsb2c <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3 & results_fixed_gam$convergence==1),aes(factor(gamma_true),sigma_eps_resids))+
   geom_boxplot()+
   geom_hline(yintercept=0)+
   theme_classic(base_size=16)+
@@ -362,112 +198,6 @@ fsb <- ggplot(results_fixed_gam,aes(factor(gamma_true),sigma_eps_resids))+
   labs(title=expression(sigma[epsilon]))+
   coord_flip()
 #arrange plots
-grid.arrange(fab,frb,fsb,ncol=3)
-#turn plotting function off
-dev.off()
-
-#values of gamma_true > 0.3 residuals
-#initialize plotting function
-pdf("fixed_high_gam_resids.pdf",10,4)
-#create plots
-fab2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),alpha_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~gamma))+
-  ylab("Residuals")+
-  labs(title=expression(alpha))+
-  coord_flip()
-frb2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),rho_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Residuals")+
-  labs(title=expression(rho))+
-  coord_flip()
-fsb2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),sigma_eps_resids))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(fab2,frb2,fsb2,ncol=3)
-#turn plotting function off
-dev.off()
-
-#all values of gamma_true residuals
-#initialize plotting function
-pdf("fixed_all_gam_rel_resids.pdf",10,4)
-#create plots
-fabr <- ggplot(results_fixed_gam,aes(factor(gamma_true),alpha_resids/alpha_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~gamma))+
-  ylab("Relative residuals")+
-  scale_y_continuous(breaks=c(0,25,50,75,100))+
-  labs(title=expression(alpha))+
-  coord_flip()
-frbr <- ggplot(results_fixed_gam,aes(factor(gamma_true),rho_resids/rho_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Relative residuals")+
-  labs(title=expression(rho))+
-  coord_flip()
-fsbr <- ggplot(results_fixed_gam,aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Relative residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(fabr,frbr,fsbr,ncol=3)
-#turn plotting function off
-dev.off()
-
-#values of gamma_true > 0.3 residuals
-#initialize plotting function
-pdf("fixed_high_gam_rel_resids.pdf",10,4)
-#create plots
-fabr2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),alpha_resids/alpha_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab(expression("True"~gamma))+
-  ylab("Relative residuals")+
-  labs(title=expression(alpha))+
-  coord_flip()
-frbr2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),rho_resids/rho_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Relative residuals")+
-  labs(title=expression(rho))+
-  coord_flip()
-fsbr2 <- ggplot(subset(results_fixed_gam,results_fixed_gam$gamma_true>0.3),aes(factor(gamma_true),sigma_eps_resids/sigma_eps_true))+
-  geom_boxplot()+
-  geom_hline(yintercept=0)+
-  theme_classic(base_size=16)+
-  xlab("")+
-  scale_x_discrete(breaks=NULL)+
-  ylab("Relative residuals")+
-  labs(title=expression(sigma[epsilon]))+
-  coord_flip()
-#arrange plots
-grid.arrange(fabr2,frbr2,fsbr2,ncol=3)
+grid.arrange(fab2c,frb2c,fsb2c,ncol=3)
 #turn plotting function off
 dev.off()
